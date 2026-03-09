@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux";
 
-import { setQuoteContVis } from "../../store/slices/visibility.js"
-import { deleteProspect, setCurrProspect } from "../../store/slices/prospectData.js"
+import { deleteProspect, setCurrQuote } from "../../store/slices/prospectData.js"
 
 import { FaCarCrash } from "react-icons/fa";
 import { GiPirateGrave } from "react-icons/gi";
@@ -9,50 +8,48 @@ import { FaHospital } from "react-icons/fa6";
 import { FaHouseFire } from "react-icons/fa6";
 import { FaTrashAlt } from "react-icons/fa";
 
-const Quote = ({
-    id,
-    quoteData
-}) => {
+const Quote = ({ quoteData }) => {
     const dispatch = useDispatch();
 
     const {
-        auto: { DSS, price: autoPrice },
-        life: { TERM, GIFE, price: lifePrice },
-        health: { STDI, SUPP, price: healthPrice },
-        fire: { RNTRS, HOME, price: firePrice }
-    } = quoteData;
+        id,
+        auto = {},
+        life = {},
+        health = {},
+        fire = {}
+    } = quoteData || {};
 
-    const total = Object.values(quoteData).reduce(
-        (sum, category) => sum + category.price, 0
-    );
+    const { DSS = {}, price: autoPrice = 0 } = auto;
+    const { TERM = {}, GIFE = {}, price: lifePrice = 0 } = life;
+    const { STDI = {}, SUPP = {}, price: healthPrice = 0 } = health;
+    const { RNTRS = {}, HOME = {}, price: firePrice = 0 } = fire;
+
+    const autoActive = true;
+    const lifeActive = TERM?.add || GIFE?.add;
+    const healthActive = STDI?.add || SUPP?.add;
+    const fireActive = RNTRS?.add || HOME?.add;
+
+    const total = autoPrice + lifePrice + healthPrice + firePrice;
 
     return (
         <div className="flex justify-center items-center w-full h-fit text-white">
             <div 
             onClick={() => {
-                // if (id) {
-                //     dispatch(setCurrProspect(id));
-                //     dispatch(setQuoteContVis());
-                // };
-
-                return;
+                if (id) dispatch(setCurrQuote(id));
             }}
-            className="flex w-[97%] items-center h-20 pl-10 py-10 shadow-lg mr-1 my-2 rounded-md border-b-4 border-slate-900 text-xl bg-slate-800 cursor-pointer">
-                <div className="w-[20%] font-bold">
-                    {/* { firstName.toUpperCase() } { lastName.toUpperCase() } */}
-                </div>
+            className="flex w-full items-center h-20 pl-10 py-10 shadow-lg my-2 rounded-lg border-b-4 border-slate-900 text-xl bg-emerald-700 cursor-pointer">
 
                 <div className={`
-                    ml-10 mr-44 font-bold
+                    font-bold mr-14
                 `}>
                     ${ total }
                 </div>
 
-                <div className="flex justify-between w-[22%]">
+                <div className="flex justify-evenly w-[65%]">
                     <div 
                     className={`
                         ${
-                            auto.length ? 
+                            autoActive ? 
                             "opacity-100" :
                             "opacity-10"
                         }
@@ -67,7 +64,7 @@ const Quote = ({
                     <div 
                     className={`
                         ${
-                            life.length ? 
+                            lifeActive ? 
                             "opacity-100" :
                             "opacity-10"
                         }
@@ -82,7 +79,7 @@ const Quote = ({
                     <div 
                     className={`
                         ${
-                            health.length ? 
+                            healthActive ? 
                             "opacity-100" :
                             "opacity-10"
                         }
@@ -97,7 +94,7 @@ const Quote = ({
                     <div 
                     className={`
                         ${
-                            fire.length ? 
+                            fireActive ? 
                             "opacity-100" :
                             "opacity-10"
                         }
@@ -109,7 +106,7 @@ const Quote = ({
                     </div>
                 </div>
 
-                <div className="flex justify-end w-[38.5%] ">
+                <div className="flex justify-end w-[19%]">
                     <div 
                     onClick={e => {
                         e.stopPropagation();

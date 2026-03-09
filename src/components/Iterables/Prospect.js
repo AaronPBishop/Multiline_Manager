@@ -21,7 +21,6 @@ const Prospect = ({
 }) => {
     const dispatch = useDispatch();
 
-    console.log(auto, life, health, fire)
     return (
         <div className="flex justify-center items-center w-full h-fit text-white">
             <div 

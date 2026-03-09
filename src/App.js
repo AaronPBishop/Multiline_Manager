@@ -9,6 +9,7 @@ import QuotesContainer from "./components/Containers/QuotesContainer.js";
 const App = () => {
     const dispatch = useDispatch();
 
+    const prospectData = useSelector(state => state.prospectData);
     const visibility = useSelector(state => state.visibility);
 
     useEffect(() => {
@@ -25,6 +26,7 @@ const App = () => {
                 visibility?.prospectContVis ?
                 <ProspectContainer /> :
                 visibility?.quoteContVis &&
+                prospectData?.currProspect &&
                 <QuotesContainer />
             }
 

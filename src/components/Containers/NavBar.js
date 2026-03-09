@@ -15,11 +15,6 @@ const NavBar = () => {
 
     const [prospectModalVisible, setProspectModalVisible] = useState(false);
 
-    useEffect(() => {
-        console.log(visibilityState)
-        console.log(visibilityState.prospectContVisible)
-    }, [prospectModalVisible]);
-
     return (
         <div
         className="flex justify-between items-center fixed top-0 left-0 w-full h-20 shadow-xl bg-slate-900 z-50 p-3 border-b-1 border-slate-700">
@@ -31,7 +26,14 @@ const NavBar = () => {
 
             <div
             onClick={() => setProspectModalVisible(!prospectModalVisible)}
-            className="flex h-full justify-between bg-emerald-600 text-xl text-white px-8 py-4 mx-6 rounded-md border-b-4 border-emerald-900 shadow-lg text-center flex align-center items-center cursor-pointer font-bold w-[50%]">
+            className={`
+                ${
+                    visibilityState?.prospectContVis ?
+                    "bg-emerald-600 border-emerald-900" :
+                    "bg-orange-500 border-orange-800"
+                }
+                flex h-full justify-between text-xl text-white px-8 py-4 mx-6 rounded-md border-b-4 shadow-lg text-center flex align-center items-center cursor-pointer font-bold w-[50%]
+            `}>
                 {
                     visibilityState?.prospectContVis ?
                     "New Prospect" :
