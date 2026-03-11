@@ -13,18 +13,18 @@ const Quote = ({ quoteData }) => {
 
     const {
         id,
-        auto = {},
-        life = {},
-        health = {},
-        fire = {}
-    } = quoteData || {};
+        auto,
+        life,
+        health,
+        fire
+    } = quoteData;
 
-    const { DSS = {}, price: autoPrice = 0 } = auto;
+    const { price: autoPrice = 0 } = auto;
     const { TERM = {}, GIFE = {}, price: lifePrice = 0 } = life;
     const { STDI = {}, SUPP = {}, price: healthPrice = 0 } = health;
     const { RNTRS = {}, HOME = {}, price: firePrice = 0 } = fire;
 
-    const autoActive = true;
+    const autoActive = quoteData.auto.add;
     const lifeActive = TERM?.add || GIFE?.add;
     const healthActive = STDI?.add || SUPP?.add;
     const fireActive = RNTRS?.add || HOME?.add;
@@ -113,7 +113,7 @@ const Quote = ({ quoteData }) => {
                         
                         dispatch(deleteProspect(id));
                     }}
-                    className="flex right-1 items-center justify-center bg-red-500 text-white w-8 h-8 mb-10 rounded-lg text-center text-[16px] cursor-pointer">
+                    className="flex relative right-1 items-center justify-center bg-red-500 text-white w-8 h-8 mb-10 rounded-lg text-center text-[16px] cursor-pointer">
                         <FaTrashAlt />
                     </div>
                 </div>

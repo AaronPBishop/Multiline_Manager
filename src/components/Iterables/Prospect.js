@@ -20,7 +20,7 @@ const Prospect = ({
     fire
 }) => {
     const dispatch = useDispatch();
-
+    
     return (
         <div className="flex justify-center items-center w-full h-fit text-white">
             <div 
@@ -52,7 +52,7 @@ const Prospect = ({
                     <div 
                     className={`
                         ${
-                            auto.length ? 
+                            auto ? 
                             "opacity-100" :
                             "opacity-10"
                         }

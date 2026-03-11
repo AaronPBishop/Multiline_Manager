@@ -18,14 +18,26 @@ const initialState = {
     currQuote: {
         id: "",
         auto: {
-            DSS: { add: false }, price: 0
+            add: false,
+            coverages: {
+                liabilityBi: [30, 60],
+                liabilityPd: Number(25),
+                uninsuredBi: [0, 0],
+                uninsuredPd: Number(0),
+                pip: Number(0),
+                comp: Number(0),
+                collision: Number(0)
+            },
+            DSS: { add: false }, 
+            price: 0
         },
         life: {
             TERM: {
                 add: false,
-                type: Number(0) // TERM PERIOD
+                type: "" // TERM PERIOD - ACCEPTED TYPES: TERM_10, TERM_20, TERM_30
             },
-            GIFE: { add: false }, price: 0
+            GIFE: { add: false }, 
+            price: 0
         },
         health: {
             STDI: {
@@ -41,8 +53,11 @@ const initialState = {
             RNTRS: { add: false },
             HOME: {
                 add: false,
+                liability: 0,
+                deductible: 0,
                 type: "" // TENANT / NON-TENANT
-            }, price: 0
+            }, 
+            price: 0
         }
     }
 };
@@ -75,16 +90,62 @@ export const prospectDataSlice = createSlice({
             state.currProspect = state.prospects.find(prospect =>
                 prospect.id === action.payload
             );
-            console.log("CURR PROSPECT: ", state.currProspect)
+
+            state.currQuote = state.currProspect.quotes[0];
         },
 
         // Current Quote
         setCurrQuote: (state, action) => {
-            console.log("CURR PROSPECT QUOTES: ", state.currProspect.quotes);
-            console.log("ACTION PAYLOAD: ", action.payload)
-            state.currQuote = state.currProspect.quotes.find(quote =>
-                quote.id === action.payload
+            const quote = state.currProspect.quotes.find(
+                q => q.id === action.payload
             );
+
+            if (quote) state.currQuote = quote;
+        },
+
+        updateQuoteAuto: (state, action) => {
+            const updatedAutoData = action.payload;
+
+            state.currQuote.auto = updatedAutoData;
+        },
+
+        updateQuoteLife: (state, action) => {
+            const updatedLifeData = action.payload
+
+            state.currQuote.life = updatedLifeData;
+        },
+
+        updateQuoteHealth: (state, action) => {
+            const updatedHealthData = action.payload
+
+            state.currQuote.health = updatedHealthData;
+        },
+
+        updateQuoteFire: (state, action) => {
+            const updatedFireData = action.payload
+
+            state.currQuote.fire = updatedFireData;
+        },
+
+        persistQuoteData: (state) => {
+            const prospect = state.prospects.find(p => p.id === state.currProspect.id);
+        
+            if (!prospect) return;
+        
+            const quoteIndex = prospect.quotes.findIndex(q => q.id === state.currQuote.id);
+        
+            if (quoteIndex !== -1) prospect.quotes[quoteIndex] = state.currQuote;
+        },
+
+        addQuoteToExisting: (state, action) => {
+            const { ...newQuote } = action.payload;
+            const prospect = state.prospects.find(p => p.id === state.currProspect.id);
+
+            if (prospect) {
+                prospect.quotes = [...newQuote.quotes];
+                state.currQuote = newQuote;
+                state.currProspect.quotes = prospect.quotes;
+            };
         },
     },
 });
@@ -95,7 +156,13 @@ export const {
     deleteProspect,
     clearProspects,
     setCurrProspect,
-    setCurrQuote
+    setCurrQuote,
+    updateQuoteAuto,
+    updateQuoteLife,
+    updateQuoteHealth,
+    updateQuoteFire,
+    persistQuoteData,
+    addQuoteToExisting
 } = prospectDataSlice.actions;
 
 export default prospectDataSlice.reducer;

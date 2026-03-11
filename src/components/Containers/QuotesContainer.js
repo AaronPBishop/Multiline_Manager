@@ -1,17 +1,24 @@
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import { FaCarCrash } from "react-icons/fa";
 import { GiPirateGrave } from "react-icons/gi";
 import { FaHospital } from "react-icons/fa6";
 import { FaHouseFire } from "react-icons/fa6";
 
-import { useEffect, useState } from "react";
-
 import Quote from '../Iterables/Quote.js'
+import AutoLine from "../Iterables/Line/AutoLine.js";
+import LifeLine from "../Iterables/Line/LifeLine.js";
+import HealthLine from "../Iterables/Line/HealthLine.js";
+import FireLine from "../Iterables/Line/FireLine.js";
 
 const QuotesContainer = () => {
     const prospectState = useSelector(state => state.prospectData);
-    const currProspect = prospectState.currProspect;
+
+    const autoTotal = useSelector(state => state.prospectData.currQuote.auto?.price);
+    const lifeTotal = useSelector(state => state.prospectData.currQuote.life?.price);
+    const healthTotal = useSelector(state => state.prospectData.currQuote.health?.price);
+    const fireTotal = useSelector(state => state.prospectData.currQuote.fire?.price);
 
     const [selectedLine, setSelectedLine] = useState("auto");
     const lines = [
@@ -41,78 +48,24 @@ const QuotesContainer = () => {
         }
     ];
 
-    const [autoPrice, setAutoPrice] = useState(false);
-    const [dss, setDSS] = useState(false);
-
-    const [lifePrice, setLifePrice] = useState(false);
-    const [termType, setTermType] = useState(0);
-
-    const [healthPrice, setHealthPrice] = useState(false);
-    const [stdiBenefit, setStdiBenefit] = useState(0);
-    const [suppHealthBenefit, setSuppHealthBenefit] = useState(0);
-
-    const [firePrice, setFirePrice] = useState(false);
-    const [homeownersType, setHomeownersType] = useState("");
-
     const selected = lines.find(line => line.key === selectedLine);
     const remaining = lines.filter(line => line.key !== selectedLine);
-
-    useEffect(() => {
-        console.log("CURR QUOTE: ", prospectState.currQuote);
-    }, [currProspect?.quotes]);
     
     return (
-        <div className="items-center h-[90%] mt-16 w-screen">
+        <div className="items-center h-[90%] mt-16 w-screen overflow-hidden">
             <div className="flex justify-between flex-wrap w-full h-full">
                 <div 
                 className="flex w-[65%] items-center h-[75%] mt-10 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
                     <div className="w-[70%] h-full flex items-center justify-center">
                         {
-                            selected && (
-                                <div 
-                                className={`
-                                    ${selected.color} 
-                                    ${selected.borderColor}
-                                    flex flex-wrap items-center justify-center w-full h-full rounded cursor-pointer ml-2 rounded-xl border-b-4 shadow-xl
-                                `}>
-                                    <selected.icon 
-                                    className="w-44 h-44 text-white" 
-                                    />
-
-                                    <div 
-                                    key={selectedLine}
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                    }}
-                                    className={`
-                                        ${
-                                            selectedLine && "opacity-100 translate-y-2"
-                                        }
-                                        transition-all duration-300 ease-out
-                                        bg-red-600 text-white mt-[2px] px-[6px] py-[2px] rounded text-center cursor-pointer w-[80%]
-                                    `}> 
-                                            {
-                                                selectedLine === "auto" ? "DSS" :
-                                                selectedLine === "life" ? "Term Type" :
-                                                selectedLine === "health" ? "Benefit Amount" :
-                                                selectedLine === "fire" ? "Occupancy Type" :
-                                                null
-                                            }
-                                    </div>
-
-                                    <input
-                                    onChange={e => {
-                                        selectedLine === "auto" ? setAutoPrice(e.target.value) :
-                                        selectedLine === "life" ? setLifePrice(e.target.value) :
-                                        selectedLine === "health" ? setHealthPrice(e.target.value) :
-                                        selectedLine === "fire" && setFirePrice(e.target.value)
-                                    }}
-                                    type="text"
-                                    placeholder="Price"
-                                    className="w-[80%] border border-gray-300 rounded p-2 mb-4"
-                                    />
-                                </div>
-                            )
+                            selected && selectedLine === "auto" ?
+                            <AutoLine /> :
+                            selected && selectedLine === "life" ?
+                            <LifeLine /> :
+                            selected && selectedLine === "health" ?
+                            <HealthLine /> :
+                            selected && selectedLine === "fire" &&
+                            <FireLine />
                         }
                     </div>
 
@@ -139,13 +92,13 @@ const QuotesContainer = () => {
                 </div>
 
                 <div 
-                className="flex w-[33%] h-[75%] mt-10 mr-3 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
+                className="w-[33%] h-[75%] mt-10 mr-3 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
                     {
-                        currProspect?.quotes?.map(quote => {
+                        prospectState.currProspect?.quotes?.map(quote => {
                             return (
                                 <Quote
-                                key={quote.id}
                                 quoteData={quote}
+                                key={quote?.id}
                                 />
                             )}
                         )
@@ -153,8 +106,89 @@ const QuotesContainer = () => {
                 </div>
 
                 <div 
-                className="flex w-full items-center h-[10%] mr-3 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
-                    
+                className="flex w-full justify-evenly items-center h-[15%] mr-3 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
+                    <div 
+                    className={`
+                        ${
+                            autoTotal ? 
+                            "opacity-100" :
+                            "opacity-10"
+                        }
+                        flex justify-center flex-wrap align-items text-center bg-blue-800 text-white h-full w-24 p-4 rounded
+                    `}>
+                        <FaCarCrash 
+                        className="w-8 h-8"
+                        />
+
+                        <div className="w-full">
+                            ${autoTotal}
+                        </div>
+                    </div>
+
+                    <div 
+                    className={`
+                        ${
+                            lifeTotal ? 
+                            "opacity-100" :
+                            "opacity-10"
+                        }
+                        flex justify-center flex-wrap align-items text-center bg-green-600 text-white h-full w-24 p-4 rounded
+                    `}>
+                        <GiPirateGrave 
+                        className="w-8 h-8"
+                        />
+
+                        <div className="w-full">
+                            ${lifeTotal}
+                        </div>
+                    </div>
+
+                    <div 
+                    className={`
+                        ${
+                            healthTotal ? 
+                            "opacity-100" :
+                            "opacity-10"
+                        }
+                        flex justify-center flex-wrap align-items text-center bg-pink-700 text-white h-full w-24 p-4 rounded
+                    `}>
+                        <FaHospital 
+                        className="w-8 h-8"
+                        />
+
+                        <div className="w-full">
+                            ${healthTotal}
+                        </div>
+                    </div>
+
+                    <div 
+                    className={`
+                        ${
+                            fireTotal ? 
+                            "opacity-100" :
+                            "opacity-10"
+                        }
+                        flex justify-center flex-wrap align-items text-center bg-red-600 text-white h-full w-24 p-4 rounded
+                    `}>
+                        <FaHouseFire 
+                        className="w-8 h-8"
+                        />
+
+                        <div className="w-full">
+                            ${fireTotal}
+                        </div>
+                    </div>
+
+                    <div 
+                    className={`
+                        flex justify-center flex-wrap align-items text-center bg-red-600 text-white h-full w-64 p-4 rounded
+                    `}>
+
+
+                        <div className="w-full text-center flex justify-center items-center text-3xl">
+                            ${autoTotal + lifeTotal + healthTotal + fireTotal}/mo
+                        </div>
+                    </div>
                 </div>
             </div> 
         </div>

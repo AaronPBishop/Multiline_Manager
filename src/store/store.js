@@ -12,6 +12,10 @@ export const store = configureStore({
 store.subscribe(() => {
     const state = store.getState();
 
+    console.log("I SAVED TO LOCAL")
+    console.log("ALL THE STATE: ", state);
+
+
     localStorage.setItem(
         "prospect_data",
         JSON.stringify(state.prospectData.prospects)

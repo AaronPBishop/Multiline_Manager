@@ -2,14 +2,26 @@ export const processQuoteData = (currProspect) => {
     const quoteData = {
         id: crypto.randomUUID(),
         auto: {
-            DSS: { add: false }, price: 0
+            add: false,
+            coverages: {
+                liabilityBi: [30, 60],
+                liabilityPd: Number(25),
+                uninsuredBi: [0, 0],
+                uninsuredPd: Number(0),
+                pip: Number(0),
+                comp: Number(0),
+                collision: Number(0)
+            },
+            DSS: { add: false }, 
+            price: 0
         },
         life: {
             TERM: {
                 add: false,
-                type: Number(0) // TERM PERIOD
+                type: "" // TERM PERIOD - ACCEPTED TYPES: TERM_10, TERM_20, TERM_30
             },
-            GIFE: { add: false }, price: 0
+            GIFE: { add: false }, 
+            price: 0
         },
         health: {
             STDI: {
@@ -25,12 +37,15 @@ export const processQuoteData = (currProspect) => {
             RNTRS: { add: false },
             HOME: {
                 add: false,
+                liability: 0,
+                deductible: 0,
                 type: "" // TENANT / NON-TENANT
             }, price: 0
         }
     };
 
-    if (currProspect.auto === "DSS") quoteData.auto.DSS.add = true;
+    if (currProspect.auto) quoteData.auto.add = true;
+    if (currProspect.dss === "DSS") quoteData.auto.DSS.add = true;
 
     if (currProspect.life === "TERM") quoteData.life.TERM.add = true;
     if (currProspect.life === "GIFE") quoteData.life.GIFE.add = true;
@@ -49,28 +64,29 @@ export const buildNewProspect = (
     auto, dss,
     life, term, gife,
     health, stdi, suppHealth,
-    fire, renters, homeowners
+    fire, renters, homeowners,
+    existingId="", existingQuotes=[]
 ) => {
-
-    const autoValue = auto ? (dss ? "DSS" : "NO_DSS") : "";
+    const dssValue = auto ? (dss ? "DSS" : "NO_DSS") : "";
     const lifeValue = life ? (term ? "TERM" : gife ? "GIFE" : "") : "";
     const healthValue = health ? (stdi ? "STDI" : suppHealth ? "SUPP" : "") : "";
     const fireValue = fire ? (renters ? "RNTRS" : homeowners ? "HOME" : "") : "";
 
     const currProspect = {
-        id: crypto.randomUUID(),
+        id: existingId.length ? existingId : crypto.randomUUID(),
         firstName,
         lastName,
         age,
-        auto: autoValue,
+        auto,
+        dss: dssValue,
         life: lifeValue,
         health: healthValue,
         fire: fireValue,
-        quotes: []
+        quotes: existingQuotes ? existingQuotes : []
     };
 
     const quoteData = processQuoteData(currProspect);
     currProspect.quotes.push(quoteData);
-
+    
     return currProspect;
 };

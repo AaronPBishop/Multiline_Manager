@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { addProspect } from "../../store/slices/prospectData.js";
+import { addProspect, addQuoteToExisting } from "../../store/slices/prospectData.js";
+import { setProspectModVis } from "../../store/slices/visibility.js";
 
 import { buildNewProspect } from  '../../functions/prospects.js';
 
@@ -10,17 +11,16 @@ import { GiPirateGrave } from "react-icons/gi";
 import { FaHospital } from "react-icons/fa6";
 import { FaHouseFire } from "react-icons/fa6";
 
-const CreateProspect = ({ 
-    visibility,
-    setVisibility
-}) => {
+const CreateProspectQuotes = () => {
     const dispatch = useDispatch();
+
+    const visibility = useSelector(state => state.visibility.prospectModalVis);
+    const quoteContVis = useSelector(state => state.visibility.quoteContVis);
+    const currProspect = useSelector(state => state.prospectData.currProspect);
     
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [age, setAge] = useState(Number(0));
-
-    const [nameFinished, setNameFinished] = useState(false);
 
     const [auto, setAuto] = useState(false);
     const [dss, setDSS] = useState(false);
@@ -37,9 +37,20 @@ const CreateProspect = ({
     const [renters, setRenters] = useState(false);
     const [homeowners, setHomeowners] = useState(false);
 
+    const [addingQuote, setAddingQuote] = useState(false);
+
     useEffect(() => {
         if (age < 0) setAge(0);
     }, [age]);
+
+    useEffect(() => {
+        if (quoteContVis && currProspect.id.length) {
+            setAddingQuote(true);
+            setFirstName(currProspect.firstName);
+            setLastName(currProspect.lastName);
+            setAge(currProspect.age);
+        };
+    }, [currProspect, visibility]);
     
     if (!visibility) return null;
     return (
@@ -57,16 +68,14 @@ const CreateProspect = ({
                 <div className="flex justify-between">
                     <h2 className="text-xl font-bold mb-4">
                         {
-                            (nameFinished && firstName.length) && (age <= 0) ? 
-                            `${firstName} ${lastName}` :
-                            (nameFinished && firstName.length) && (age > 0) ?
-                            `${firstName} ${lastName} (${age})` :
-                            "New Prospect"
+                            addingQuote ?
+                            "Add a New Quote" :
+                            "Add a New Prospect"
                         }
                     </h2>
 
                     <div 
-                    onClick={() => setVisibility(false)}
+                    onClick={() => dispatch(setProspectModVis())}
                     className="bg-red-500 text-white h-full w-8 py-1 rounded text-center font-bold cursor-pointer">
                         X
                     </div>
@@ -74,36 +83,60 @@ const CreateProspect = ({
 
                 <div className="flex justify-between w-full">
                     <input
+                    disabled={addingQuote}
                     onChange={e => {
-                        setNameFinished(false);
                         setFirstName(e.target.value);
                     }}
-                    onBlur={() => firstName.length && setNameFinished(true)}
+                    onBlur={() => firstName.length}
                     type="text"
                     placeholder="First Name"
-                    className="w-[49%] border border-gray-300 rounded p-2 mb-4"
+                    className={`
+                        ${addingQuote && "opacity-50"}
+                        w-[49%] border border-gray-300 rounded p-2 mb-4    
+                    `}
+                    value={
+                        addingQuote ?
+                        firstName.toUpperCase() :
+                        null
+                    }
                     />
     
                     <input
+                    disabled={addingQuote}
                     onChange={e => {
-                        setNameFinished(false);
                         setLastName(e.target.value);
                     }}
-                    onBlur={() => firstName.length && setNameFinished(true)}
+                    onBlur={() => firstName.length}
                     type="text"
                     placeholder="Last Name"
-                    className="w-[49%] border border-gray-300 rounded p-2 mb-4"
+                    className={`
+                        ${addingQuote && "opacity-50"}
+                        w-[49%] border border-gray-300 rounded p-2 mb-4    
+                    `}
+                    value={
+                        addingQuote ?
+                        lastName.toUpperCase() :
+                        null
+                    }
                     />
                 </div>
             
                 <input
-                    onChange={e => {
-                        setAge(Number(e.target.value))
-                        setFirstName(firstName);
-                    }}
-                    type="number"
-                    placeholder="Age"
-                    className="w-full border border-gray-300 rounded p-2 mb-4"
+                disabled={addingQuote}
+                onChange={e => {
+                    setAge(Number(e.target.value));
+                }}
+                type="number"
+                placeholder="Age"
+                className={`
+                    ${addingQuote && "opacity-50"}
+                    w-full border border-gray-300 rounded p-2 mb-4    
+                `}
+                value={
+                    addingQuote ?
+                    age :
+                    null
+                }
                 />
 
                 <div
@@ -124,9 +157,13 @@ const CreateProspect = ({
 
                     <div 
                     onClick={() => {
-                        if (auto) setDSS(false);
+                        if (auto) {
+                            setAuto(false);
+                            setDSS(false);
+                            return;
+                        };
 
-                        setAuto(!auto);
+                        setAuto(true);
                     }}
                     className={`
                         ${
@@ -341,12 +378,29 @@ const CreateProspect = ({
             
                 <div 
                 onClick={() => {
-                    setNameFinished(true);
-
-                    if (firstName.length < 2 || age <= 0) {
+                    if (firstName.length <= 2 || lastName.length <= 2 || age <= 1) {
                         setFirstName("Error: invalid entry");
                         setAge(0);
 
+                        return;
+                    };
+
+                    dispatch(setProspectModVis());
+
+                    if (addingQuote) {
+                        dispatch(
+                            addQuoteToExisting(
+                                buildNewProspect(
+                                    firstName, lastName, age,
+                                    auto, dss,
+                                    life, term, gife,
+                                    health, stdi, suppHealth,
+                                    fire, renters, homeowners,
+                                    currProspect.id, [...currProspect.quotes]
+                                )
+                            )
+                        );
+                        
                         return;
                     };
 
@@ -361,8 +415,6 @@ const CreateProspect = ({
                             )
                         )
                     );
-
-                    setVisibility(false);
                 }}
                 className={`
                     ${
@@ -381,4 +433,4 @@ const CreateProspect = ({
     )
 };
 
-export default CreateProspect;
+export default CreateProspectQuotes;
