@@ -20,6 +20,19 @@ const QuotesContainer = () => {
     const healthTotal = useSelector(state => state.prospectData.currQuote.health?.price);
     const fireTotal = useSelector(state => state.prospectData.currQuote.fire?.price);
 
+    const [totalBundlePrice, setTotalBundlePrice] = useState(0);
+
+    useEffect(() => {
+        const total =
+        (autoTotal ?? 0) +
+        (lifeTotal ?? 0) +
+        (healthTotal ?? 0) +
+        (fireTotal ?? 0);
+
+        const roundedTotal = Math.round(total * 100) / 100;
+        setTotalBundlePrice(roundedTotal.toFixed(2));
+    }, [autoTotal, lifeTotal, healthTotal, fireTotal]);
+
     const [selectedLine, setSelectedLine] = useState("auto");
     const lines = [
         {
@@ -95,9 +108,10 @@ const QuotesContainer = () => {
                 className="w-[33%] h-[75%] mt-10 mr-3 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
                     {
                         prospectState.currProspect?.quotes?.map(quote => {
+                            console.log(quote.id)
                             return (
                                 <Quote
-                                quoteData={quote}
+                                quoteId={quote?.id}
                                 key={quote?.id}
                                 />
                             )}
@@ -106,87 +120,87 @@ const QuotesContainer = () => {
                 </div>
 
                 <div 
-                className="flex w-full justify-evenly items-center h-[15%] mr-3 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
-                    <div 
-                    className={`
-                        ${
-                            autoTotal ? 
-                            "opacity-100" :
-                            "opacity-10"
-                        }
-                        flex justify-center flex-wrap align-items text-center bg-blue-800 text-white h-full w-24 p-4 rounded
-                    `}>
-                        <FaCarCrash 
-                        className="w-8 h-8"
-                        />
+                className="flex w-full justify-between items-center h-[15%] mr-3 pl-1 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[24px] overflow-hidden">
+                    <div className="flex w-[65%] gap-x-10 py-2">
+                        <div 
+                        className={`
+                            ${
+                                autoTotal ? 
+                                "opacity-100" :
+                                "opacity-10"
+                            }
+                            flex justify-center flex-wrap align-items text-center bg-blue-800 text-white h-full w-[15.5%] p-4 rounded-lg
+                        `}>
+                            <FaCarCrash 
+                            className="w-8 h-8"
+                            />
 
-                        <div className="w-full">
-                            ${autoTotal}
+                            <div className="w-full">
+                                ${autoTotal}
+                            </div>
+                        </div>
+
+                        <div 
+                        className={`
+                            ${
+                                lifeTotal ? 
+                                "opacity-100" :
+                                "opacity-10"
+                            }
+                            flex justify-center flex-wrap align-items text-center bg-green-600 text-white h-full w-[15.5%] p-4 rounded-lg
+                        `}>
+                            <GiPirateGrave 
+                            className="w-8 h-8"
+                            />
+
+                            <div className="w-full">
+                                ${lifeTotal}
+                            </div>
+                        </div>
+
+                        <div 
+                        className={`
+                            ${
+                                healthTotal ? 
+                                "opacity-100" :
+                                "opacity-10"
+                            }
+                            flex justify-center flex-wrap align-items text-center bg-pink-700 text-white h-full w-[15.5%] p-4 rounded-lg
+                        `}>
+                            <FaHospital 
+                            className="w-8 h-8"
+                            />
+
+                            <div className="w-full">
+                                ${healthTotal}
+                            </div>
+                        </div>
+
+                        <div 
+                        className={`
+                            ${
+                                fireTotal ? 
+                                "opacity-100" :
+                                "opacity-10"
+                            }
+                            flex justify-center flex-wrap align-items text-center bg-red-600 text-white h-full w-[15.5%] p-4 rounded-lg
+                        `}>
+                            <FaHouseFire 
+                            className="w-8 h-8"
+                            />
+
+                            <div className="w-full">
+                                ${fireTotal}
+                            </div>
                         </div>
                     </div>
 
-                    <div 
-                    className={`
-                        ${
-                            lifeTotal ? 
-                            "opacity-100" :
-                            "opacity-10"
-                        }
-                        flex justify-center flex-wrap align-items text-center bg-green-600 text-white h-full w-24 p-4 rounded
-                    `}>
-                        <GiPirateGrave 
-                        className="w-8 h-8"
-                        />
-
-                        <div className="w-full">
-                            ${lifeTotal}
-                        </div>
-                    </div>
-
-                    <div 
-                    className={`
-                        ${
-                            healthTotal ? 
-                            "opacity-100" :
-                            "opacity-10"
-                        }
-                        flex justify-center flex-wrap align-items text-center bg-pink-700 text-white h-full w-24 p-4 rounded
-                    `}>
-                        <FaHospital 
-                        className="w-8 h-8"
-                        />
-
-                        <div className="w-full">
-                            ${healthTotal}
-                        </div>
-                    </div>
-
-                    <div 
-                    className={`
-                        ${
-                            fireTotal ? 
-                            "opacity-100" :
-                            "opacity-10"
-                        }
-                        flex justify-center flex-wrap align-items text-center bg-red-600 text-white h-full w-24 p-4 rounded
-                    `}>
-                        <FaHouseFire 
-                        className="w-8 h-8"
-                        />
-
-                        <div className="w-full">
-                            ${fireTotal}
-                        </div>
-                    </div>
-
-                    <div 
-                    className={`
-                        flex justify-center flex-wrap align-items text-center bg-red-600 text-white h-full w-64 p-4 rounded
-                    `}>
-
-
-                        <div className="w-full text-center flex justify-center items-center text-3xl">
-                            ${autoTotal + lifeTotal + healthTotal + fireTotal}/mo
+                    <div className="flex w-[33%] text-center flex justify-center items-center text-3xl h-full pb-4">
+                        <div 
+                        className={`
+                            justify-center bg-red-600 text-white h-full w-full p-4 rounded-bl-lg border-b-4 border-red-800
+                        `}>
+                            ${ totalBundlePrice }/mo
                         </div>
                     </div>
                 </div>

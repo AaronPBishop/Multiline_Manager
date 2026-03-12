@@ -36,20 +36,14 @@ const AutoLine = () => {
 
             <div className="flex justify-center flex-wrap items-center w-[55%] h-[43%]">
                 <input
-                onChange={e => {
-                    const value = Number(e.target.value);
-
-                    const currAutoQuote = {
-                        ...auto,
-                        price: value
-                    };
-
-                    dispatch(updateQuoteAuto(currAutoQuote));
-                }}
                 type="number"
                 placeholder="Monthly Total"
                 className="w-[80%] border border-gray-300 rounded p-2"
-                value={monthlyTotal}
+                value={monthlyTotal ?? ""}
+                onChange={e => {
+                    const value = e.target.value === "" ? "" : Number(e.target.value);
+                    dispatch(updateQuoteAuto({ ...auto, price: value }));
+                }}
                 />
                 
                 <MdContentPasteGo 

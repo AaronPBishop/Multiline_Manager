@@ -27,20 +27,14 @@ const LifeLine = () => {
 
             <div className="flex justify-center flex-wrap items-center w-[55%] h-[32%]">
                 <input
-                onChange={e => {
-                    const value = Number(e.target.value);
-
-                    const currLifeQuote = {
-                        ...life,
-                        price: value
-                    };
-
-                    dispatch(updateQuoteLife(currLifeQuote));
-                }}
-                type="number"
-                placeholder="Monthly Total"
-                className="w-[80%] border border-gray-300 rounded p-2"
-                value={monthlyTotal}
+                    type="number"
+                    placeholder="Monthly Total"
+                    className="w-[80%] border border-gray-300 rounded p-2"
+                    value={monthlyTotal ?? ""}
+                    onChange={e => {
+                        const value = e.target.value === "" ? "" : Number(e.target.value);
+                        dispatch(updateQuoteLife({ ...life, price: value }));
+                    }}
                 />
                 
                 <MdContentPasteGo 
@@ -60,20 +54,14 @@ const LifeLine = () => {
                 />
 
                 <input
-                onChange={e => {
-                    const value = Number(e.target.value);
-
-                    const currLifeQuote = {
-                        ...life,
-                        price: value / 12
-                    };
-
-                    dispatch(updateQuoteLife(currLifeQuote));
-                }}
-                type="number"
-                placeholder="6 Month Total"
-                className="w-[80%] border border-gray-300 rounded p-2"
-                value={monthlyTotal && monthlyTotal * 12}
+                    type="number"
+                    placeholder="12 Month Total"
+                    className="w-[80%] border border-gray-300 rounded p-2"
+                    value={monthlyTotal !== undefined && monthlyTotal !== "" ? monthlyTotal * 12 : ""}
+                    onChange={e => {
+                        const value = e.target.value === "" ? "" : Number(e.target.value);
+                        dispatch(updateQuoteLife({ ...life, price: value / 12 }));
+                    }}
                 />
 
                 <MdContentPasteGo 

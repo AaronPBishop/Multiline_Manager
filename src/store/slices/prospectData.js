@@ -96,35 +96,37 @@ export const prospectDataSlice = createSlice({
 
         // Current Quote
         setCurrQuote: (state, action) => {
-            const quote = state.currProspect.quotes.find(
-                q => q.id === action.payload
-            );
-
-            if (quote) state.currQuote = quote;
+            const quote = state.currProspect.quotes.find(q => q.id === action.payload);
+            if (quote) state.currQuote = { ...quote }; // create a new reference
         },
 
         updateQuoteAuto: (state, action) => {
-            const updatedAutoData = action.payload;
+            state.currQuote.auto = action.payload;
 
-            state.currQuote.auto = updatedAutoData;
+            // Persist immediately to currProspect.quotes
+            const index = state.currProspect.quotes.findIndex(q => q.id === state.currQuote.id);
+            if (index !== -1) state.currProspect.quotes[index] = { ...state.currQuote };
         },
 
         updateQuoteLife: (state, action) => {
-            const updatedLifeData = action.payload
-
-            state.currQuote.life = updatedLifeData;
+            state.currQuote.life = action.payload;
+        
+            const index = state.currProspect.quotes.findIndex(q => q.id === state.currQuote.id);
+            if (index !== -1) state.currProspect.quotes[index] = { ...state.currQuote };
         },
 
         updateQuoteHealth: (state, action) => {
-            const updatedHealthData = action.payload
-
-            state.currQuote.health = updatedHealthData;
+            state.currQuote.health = action.payload;
+        
+            const index = state.currProspect.quotes.findIndex(q => q.id === state.currQuote.id);
+            if (index !== -1) state.currProspect.quotes[index] = { ...state.currQuote };
         },
 
         updateQuoteFire: (state, action) => {
-            const updatedFireData = action.payload
-
-            state.currQuote.fire = updatedFireData;
+            state.currQuote.fire = action.payload;
+        
+            const index = state.currProspect.quotes.findIndex(q => q.id === state.currQuote.id);
+            if (index !== -1) state.currProspect.quotes[index] = { ...state.currQuote };
         },
 
         persistQuoteData: (state) => {
