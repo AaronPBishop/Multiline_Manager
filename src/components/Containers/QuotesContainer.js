@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { FaCarCrash } from "react-icons/fa";
-import { GiPirateGrave } from "react-icons/gi";
+import { RiLifebuoyFill } from "react-icons/ri";
 import { FaHospital } from "react-icons/fa6";
 import { FaHouseFire } from "react-icons/fa6";
 
@@ -43,7 +43,7 @@ const QuotesContainer = () => {
         },
         {
           key: "life",
-          icon: GiPirateGrave,
+          icon: RiLifebuoyFill,
           color: "bg-green-600",
           borderColor: "border-green-900"
         },
@@ -105,10 +105,9 @@ const QuotesContainer = () => {
                 </div>
 
                 <div 
-                className="w-[33%] h-[75%] mt-10 mr-3 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
+                className="w-[33%] h-[75%] mt-10 mr-3 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px] overflow-auto">
                     {
                         prospectState.currProspect?.quotes?.map(quote => {
-                            console.log(quote.id)
                             return (
                                 <Quote
                                 quoteId={quote?.id}
@@ -149,7 +148,7 @@ const QuotesContainer = () => {
                             }
                             flex justify-center flex-wrap align-items text-center bg-green-600 text-white h-full w-[15.5%] p-4 rounded-lg
                         `}>
-                            <GiPirateGrave 
+                            <RiLifebuoyFill 
                             className="w-8 h-8"
                             />
 
@@ -198,9 +197,15 @@ const QuotesContainer = () => {
                     <div className="flex w-[33%] text-center flex justify-center items-center text-3xl h-full pb-4">
                         <div 
                         className={`
-                            justify-center bg-red-600 text-white h-full w-full p-4 rounded-bl-lg border-b-4 border-red-800
+                            flex flex-wrap justify-center bg-red-600 items-center text-center text-white h-full w-full p-4 rounded-bl-lg border-b-4 border-red-800 font-bold
                         `}>
-                            ${ totalBundlePrice }/mo
+                            <div className="w-[50%] text-left">
+                                ${ totalBundlePrice }/mo
+                            </div>
+
+                            <div className="w-[50%] text-right">
+                                ${ totalBundlePrice * 6 }/6mo
+                            </div>
                         </div>
                     </div>
                 </div>

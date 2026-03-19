@@ -2,6 +2,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { updateQuoteFire } from "../../../store/slices/prospectData";
 
+import { roundToTwo } from "../../../functions/totals";
+
+import { useState, useEffect } from "react";
+
 import { FaHouseFire } from "react-icons/fa6";
 import { MdContentPasteGo } from "react-icons/md";
 
@@ -9,8 +13,6 @@ const FireLine = () => {
     const dispatch = useDispatch();
 
     const fire = useSelector(state => state.prospectData.currQuote?.fire);
-
-    if (!fire) return null;
 
     const {
         price = 0,
@@ -24,6 +26,9 @@ const FireLine = () => {
 
     const monthlyTotal = price ?? 0;
     const yearlyTotal = monthlyTotal * 12;
+
+    const [monthlyInput, setMonthlyInput] = useState("");
+    const [twelveMonthInput, setTwelveMonthInput] = useState("");
 
     const updateFire = updates => {
         dispatch(
@@ -61,55 +66,90 @@ const FireLine = () => {
         });
     };
 
+    useEffect(() => {
+        if (monthlyTotal !== undefined && monthlyTotal !== null) {
+            setMonthlyInput(monthlyTotal.toFixed(2));
+            setTwelveMonthInput((monthlyTotal * 6).toFixed(2));
+        };
+    }, [monthlyTotal]);
+
     return (
         <div className="flex flex-wrap items-center gap-y-6 justify-center w-full h-full rounded ml-2 rounded-xl border-b-4 shadow-xl bg-red-600 border-red-900 overflow-auto py-8">
 
             <div className="relative left-0 top-0 w-0 h-0">
-                <FaHouseFire className="absolute w-24 h-24 text-white relative left-[-145px] top-[-100px]" />
+                <FaHouseFire className="absolute w-24 h-24 text-slate-200 relative left-[-140px] top-[-140px]" />
             </div>
 
-            <div className="flex justify-center flex-wrap items-center w-[55%] h-[35%]">
+            <div className="flex justify-center flex-wrap items-center w-[57%] h-[54%] bg-red-900 p-2 rounded-xl">
+                <div className="w-full text-white font-bold">
+                    Monthly Total
+                </div>
 
                 <input
-                    type="number"
-                    placeholder="Monthly Total"
-                    className="w-[80%] border border-gray-300 rounded p-2"
-                    value={monthlyTotal}
-                    onChange={e => {
-                        const value = Number(e.target.value) || 0;
-                        updateFire({ price: value });
-                    }}
+                type="text"
+                placeholder="Monthly Total"
+                className="w-[80%] border border-gray-300 rounded p-2 mb-2"
+                value={monthlyInput}
+                onChange={e => {
+                    setMonthlyInput(e.target.value);
+                }}
+                onBlur={() => {
+                    const num = Number(monthlyInput);
+                
+                    if (!isNaN(num)) {
+                        const rounded = roundToTwo(num);
+                    
+                        updateFire({ price: rounded });
+                        setMonthlyInput(rounded.toFixed(2));
+                    } else setMonthlyInput("");
+                }}
+                />
+
+                <MdContentPasteGo
+                className="w-[20%] h-[20%] text-white cursor-pointer"
+                onClick={async e => {
+                    e.stopPropagation();
+
+                    const pastedValue = roundToTwo(Number(await navigator.clipboard.readText()));
+
+                    updateFire({ price: pastedValue });
+                }} 
+                />
+
+                <div className="w-full text-white font-bold">
+                    12-month Total
+                </div>
+
+                <input
+                type="text"
+                placeholder="12 Month Total"
+                className="w-[80%] border border-gray-300 rounded p-2"
+                value={twelveMonthInput}
+                onChange={e => {
+                    setTwelveMonthInput(e.target.value);
+                }}
+                onBlur={() => {
+                    const num = Number(twelveMonthInput);
+                
+                    if (!isNaN(num)) {
+                        const monthly = roundToTwo(num / 12);
+                    
+                        updateFire({ price: monthly });
+                        setTwelveMonthInput((monthly * 12).toFixed(2));
+                    } else setTwelveMonthInput("");
+                }}
                 />
 
                 <MdContentPasteGo
                     className="w-[20%] h-[20%] text-white cursor-pointer"
-                    onClick={async e => {
-                        e.stopPropagation();
-                        const text = Number(await navigator.clipboard.readText()) || 0;
-                        updateFire({ price: text });
-                    }}
-                />
+                onClick={async e => {
+                    e.stopPropagation();
 
-                <input
-                    type="number"
-                    placeholder="12 Month Total"
-                    className="w-[80%] border border-gray-300 rounded p-2"
-                    value={yearlyTotal}
-                    onChange={e => {
-                        const value = Number(e.target.value) || 0;
-                        updateFire({ price: value / 12 });
-                    }}
-                />
+                    const pastedValue = roundToTwo(Number(await navigator.clipboard.readText()) / 12);
 
-                <MdContentPasteGo
-                    className="w-[20%] h-[20%] text-white cursor-pointer"
-                    onClick={async e => {
-                        e.stopPropagation();
-                        const text = Number(await navigator.clipboard.readText()) || 0;
-                        updateFire({ price: text / 12 });
-                    }}
+                    updateFire({ price: pastedValue });
+                }}   
                 />
-
             </div>
 
             <div className="flex flex-wrap justify-center w-full mb-20">

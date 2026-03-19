@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { persistQuoteData } from "../../store/slices/prospectData.js";
 import { setProspectModVis, setProspectContVis } from "../../store/slices/visibility.js"
+import { searchProspects } from "../../store/slices/prospectData.js";
 
 import { TbHomeMove } from "react-icons/tb";
 import { BsSuitSpadeFill } from "react-icons/bs";
@@ -13,6 +13,7 @@ const NavBar = () => {
     const dispatch = useDispatch();
 
     const visibilityState = useSelector(state => state.visibility);
+    const prospectSearch = useSelector(state => state.prospectData.prospectSearch);
 
     return (
         <div
@@ -40,6 +41,16 @@ const NavBar = () => {
                         className="text-slate-900 text-[35px]"
                         />
                     </div>
+
+                    <input
+                    type="text"
+                    placeholder="Search Prospects"
+                    className="w-[30%] py-4 border-b-2 border-slate-300 px-4 rounded-lg p-2 mx-6 font-bold bg-slate-50"
+                    value={prospectSearch}
+                    onChange={e => {
+                        dispatch(searchProspects(e.target.value))
+                    }}
+                    />
                 </> :
                 <>
                     <TbHomeMove 

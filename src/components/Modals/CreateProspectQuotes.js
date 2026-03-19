@@ -7,7 +7,7 @@ import { setProspectModVis } from "../../store/slices/visibility.js";
 import { buildNewProspect } from  '../../functions/prospects.js';
 
 import { FaCarCrash } from "react-icons/fa";
-import { GiPirateGrave } from "react-icons/gi";
+import { RiLifebuoyFill } from "react-icons/ri";
 import { FaHospital } from "react-icons/fa6";
 import { FaHouseFire } from "react-icons/fa6";
 
@@ -212,7 +212,7 @@ const CreateProspectQuotes = () => {
                         }
                         flex flex-wrap justify-center bg-green-600 text-white h-16 w-16 p-4 rounded cursor-pointer
                     `}>
-                        <GiPirateGrave 
+                        <RiLifebuoyFill 
                         className="w-8 h-8"
                         />
 

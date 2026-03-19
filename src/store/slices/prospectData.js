@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+    prospectSearch: "",
     prospects: [],
     currProspect: {
         id: "",
@@ -67,6 +68,10 @@ export const prospectDataSlice = createSlice({
     initialState,
     reducers: {
         // Prospects
+        searchProspects: (state, action) => {
+            state.prospectSearch = action.payload;
+        },
+
         setProspects: (state, action) => {
             state.prospects = action.payload;
         },
@@ -149,6 +154,26 @@ export const prospectDataSlice = createSlice({
                 state.currProspect.quotes = prospect.quotes;
             };
         },
+
+        deleteQuote: (state, action) => {
+            const quoteId = action.payload;
+
+            state.currProspect.quotes = state.currProspect.quotes.filter(
+                q => q.id !== quoteId
+            );
+        
+            const prospect = state.prospects.find(
+                p => p.id === state.currProspect.id
+            );
+        
+            if (prospect) {
+                prospect.quotes = prospect.quotes.filter(
+                    q => q.id !== quoteId
+                );
+            };
+        
+            if (state.currQuote.id === quoteId) state.currQuote = state.currProspect.quotes[0] || initialState.currQuote;
+        }
     },
 });
 
@@ -164,7 +189,9 @@ export const {
     updateQuoteHealth,
     updateQuoteFire,
     persistQuoteData,
-    addQuoteToExisting
+    addQuoteToExisting,
+    searchProspects,
+    deleteQuote
 } = prospectDataSlice.actions;
 
 export default prospectDataSlice.reducer;

@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 
 import { updateQuoteLife } from "../../../store/slices/prospectData";
 
-import { GiPirateGrave } from "react-icons/gi";
+import { roundToTwo } from "../../../functions/totals";
+
+import { RiLifebuoyFill } from "react-icons/ri";
 import { MdContentPasteGo } from "react-icons/md";
 
 const LifeLine = () => {
@@ -16,36 +18,60 @@ const LifeLine = () => {
 
     const monthlyTotal = useSelector(state => state.prospectData.currQuote.life?.price);
 
+    const [monthlyInput, setMonthlyInput] = useState("");
+    const [twelveMonthInput, setTwelveMonthInput] = useState("");
+
     const termTypes = [10, 20, 30];
+
+    useEffect(() => {
+        if (monthlyTotal !== undefined && monthlyTotal !== null) {
+            setMonthlyInput(monthlyTotal.toFixed(2));
+            setTwelveMonthInput((monthlyTotal * 12).toFixed(2));
+        };
+    }, [monthlyTotal]);
+
     return (
         <div className="flex flex-wrap items-center gap-y-6 justify-center w-full h-full rounded ml-2 rounded-xl border-b-4 shadow-xl bg-emerald-600 border-blue-950 overflow-auto py-8">
             <div className="relative left-0 top-0 w-0 h-0">
-                <GiPirateGrave
-                className="absolute w-24 h-24 text-white relative left-[-155px] top-[-100px]" 
+                <RiLifebuoyFill
+                className="absolute w-24 h-24 text-white relative left-[-140px] top-[-140px]" 
                 />
             </div>
 
-            <div className="flex justify-center flex-wrap items-center w-[55%] h-[32%]">
+            <div className="flex justify-center flex-wrap items-center w-[57%] h-[54%] bg-emerald-900 p-2 rounded-xl">
+                <div className="w-full text-white font-bold">
+                    Monthly Total
+                </div>
+
                 <input
-                    type="number"
-                    placeholder="Monthly Total"
-                    className="w-[80%] border border-gray-300 rounded p-2"
-                    value={monthlyTotal ?? ""}
-                    onChange={e => {
-                        const value = e.target.value === "" ? "" : Number(e.target.value);
-                        dispatch(updateQuoteLife({ ...life, price: value }));
-                    }}
+                type="text"
+                placeholder="Monthly Total"
+                className="w-[80%] border border-gray-300 rounded p-2 mb-2"
+                value={monthlyInput}
+                onChange={e => {
+                    setMonthlyInput(e.target.value);
+                }}
+                onBlur={() => {
+                    const num = Number(monthlyInput);
+                                
+                    if (!isNaN(num)) {
+                        const rounded = roundToTwo(num);
+                    
+                        dispatch(updateQuoteLife({ ...life, price: rounded }));
+                        setMonthlyInput(rounded.toFixed(2));
+                    } else setMonthlyInput("");
+                }}
                 />
                 
                 <MdContentPasteGo 
                 onClick={async e => {
                     e.stopPropagation();
 
-                    const text = Number(await navigator.clipboard.readText());
+                   const pastedValue = roundToTwo(Number(await navigator.clipboard.readText()));
 
                     const currLifeQuote = {
                         ...life,
-                        price: text
+                        price: pastedValue
                     };
                 
                     dispatch(updateQuoteLife(currLifeQuote));
@@ -53,26 +79,39 @@ const LifeLine = () => {
                 className="w-[20%] h-[20%] text-white cursor-pointer" 
                 />
 
+                <div className="w-full text-white font-bold">
+                    12-month Total
+                </div>
+
                 <input
-                    type="number"
-                    placeholder="12 Month Total"
-                    className="w-[80%] border border-gray-300 rounded p-2"
-                    value={monthlyTotal !== undefined && monthlyTotal !== "" ? monthlyTotal * 12 : ""}
-                    onChange={e => {
-                        const value = e.target.value === "" ? "" : Number(e.target.value);
-                        dispatch(updateQuoteLife({ ...life, price: value / 12 }));
-                    }}
+                type="text"
+                className="w-[80%] border border-gray-300 rounded p-2"
+                placeholder="12 Month Total"
+                value={twelveMonthInput}
+                onChange={e => {
+                    setTwelveMonthInput(e.target.value);
+                }}
+                onBlur={() => {
+                    const num = Number(twelveMonthInput);
+                                
+                    if (!isNaN(num)) {
+                        const monthly = roundToTwo(num / 12);
+                    
+                        dispatch(updateQuoteLife({ ...life, price: monthly }));
+                        setTwelveMonthInput((monthly * 12).toFixed(2));
+                    } else setTwelveMonthInput("");
+                }}
                 />
 
                 <MdContentPasteGo 
                 onClick={async e => {
                     e.stopPropagation();
 
-                    const text = Number(await navigator.clipboard.readText());
+                    const pastedValue = roundToTwo(Number(await navigator.clipboard.readText()) / 12);
 
                     const currLifeQuote = {
                         ...life,
-                        price: text / 12
+                        price: pastedValue
                     };
                 
                     dispatch(updateQuoteLife(currLifeQuote));

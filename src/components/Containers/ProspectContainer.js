@@ -4,6 +4,7 @@ import Prospect from '../Iterables/Prospect.js'
 
 const ProspectContainer = () => {
     const prospectState = useSelector(state => state.prospectData);
+    const prospectSearch = useSelector(state => state.prospectData.prospectSearch);
     
     return (
         <div className="
@@ -17,18 +18,45 @@ const ProspectContainer = () => {
                     </h1>
                 </div> :
                 [...prospectState.prospects].reverse().map(prospect => {
-                    return ( 
-                        <Prospect
-                            id={prospect.id}
-                            firstName={prospect.firstName}
-                            lastName={prospect.lastName}
-                            age={prospect.age}
-                            auto={prospect.auto}
-                            life={prospect.life}
-                            health={prospect.health}
-                            fire={prospect.fire}
-                        />
-                    )
+                    const search = prospectSearch.trim().toLowerCase();
+
+                    if (!search.length) {
+                        return (
+                            <Prospect
+                                key={prospect.id}
+                                id={prospect.id}
+                                firstName={prospect.firstName}
+                                lastName={prospect.lastName}
+                                age={prospect.age}
+                                auto={prospect.auto}
+                                life={prospect.life}
+                                health={prospect.health}
+                                fire={prospect.fire}
+                            />
+                        );
+                    };
+                
+                    if (
+                        prospect.firstName.toLowerCase().includes(search) ||
+                        prospect.lastName.toLowerCase().includes(search) ||
+                        `${prospect.firstName.toLowerCase()} ${prospect.lastName.toLowerCase()}`.includes(search)
+                    ) {
+                        return (
+                            <Prospect
+                                key={prospect.id}
+                                id={prospect.id}
+                                firstName={prospect.firstName}
+                                lastName={prospect.lastName}
+                                age={prospect.age}
+                                auto={prospect.auto}
+                                life={prospect.life}
+                                health={prospect.health}
+                                fire={prospect.fire}
+                            />
+                        );
+                    };
+                    
+                    return null;
                 })
             }
         </div>

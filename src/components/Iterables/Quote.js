@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-import { deleteProspect, setCurrQuote, persistQuoteData } from "../../store/slices/prospectData.js"
+import { deleteQuote, setCurrQuote, persistQuoteData } from "../../store/slices/prospectData.js"
 
 import { FaCarCrash } from "react-icons/fa";
-import { GiPirateGrave } from "react-icons/gi";
+import { RiLifebuoyFill } from "react-icons/ri";
 import { FaHospital } from "react-icons/fa6";
 import { FaHouseFire } from "react-icons/fa6";
 import { FaTrashAlt } from "react-icons/fa";
@@ -12,16 +12,9 @@ import { FaTrashAlt } from "react-icons/fa";
 const Quote = ({ quoteId }) => {
     const dispatch = useDispatch();
 
-    const currQuote = useSelector(state => state.prospectData.currQuote);
-
     const storedQuote = useSelector(state =>
         state.prospectData.currProspect?.quotes?.find(q => q.id === quoteId)
     );
-
-    const [autoPrice, setAutoPrice] = useState(0);
-    const [lifePrice, setLifePrice] = useState(0);
-    const [healthPrice, setHealthPrice] = useState(0);
-    const [firePrice, setFirePrice] = useState(0);
 
     const [autoActive, setAutoActive] = useState(false);
     const [lifeActive, setLifeActive] = useState(false);
@@ -31,14 +24,9 @@ const Quote = ({ quoteId }) => {
     const [total, setTotal] = useState(0);
 
     useEffect(() => {
-        if (!currQuote || currQuote.id !== quoteId) return;
+        if (!storedQuote) return;
 
-        const quote = currQuote;
-
-        setAutoPrice(quote.auto?.price ?? 0);
-        setLifePrice(quote.life?.price ?? 0);
-        setHealthPrice(quote.health?.price ?? 0);
-        setFirePrice(quote.fire?.price ?? 0);
+        const quote = storedQuote;
 
         setAutoActive(quote.auto?.add ?? false);
         setLifeActive(quote.life?.TERM?.add || quote.life?.GIFE?.add || false);
@@ -53,7 +41,7 @@ const Quote = ({ quoteId }) => {
 
         setTotal(Math.round((total + Number.EPSILON) * 100) / 100);
 
-    }, [currQuote, quoteId]);
+    }, [storedQuote, quoteId]);
 
     return (
         <div
@@ -82,7 +70,7 @@ const Quote = ({ quoteId }) => {
                     </div>
 
                     <div className={`${lifeActive ? "opacity-100" : "opacity-10"} flex justify-center bg-green-600 text-white h-14 w-14 p-4 rounded`}>
-                        <GiPirateGrave className="w-6 h-6" />
+                        <RiLifebuoyFill className="w-6 h-6" />
                     </div>
 
                     <div className={`${healthActive ? "opacity-100" : "opacity-10"} flex justify-center bg-pink-700 text-white h-14 w-14 p-4 rounded`}>
@@ -99,7 +87,7 @@ const Quote = ({ quoteId }) => {
                     <div
                         onClick={e => {
                             e.stopPropagation();
-                            dispatch(deleteProspect(quoteId));
+                            dispatch(deleteQuote(quoteId));
                         }}
                         className="flex relative right-1 items-center justify-center bg-red-500 text-white w-8 h-8 mb-10 rounded-lg text-center text-[16px] cursor-pointer"
                     >

@@ -4,7 +4,7 @@ import { setQuoteContVis } from "../../store/slices/visibility.js"
 import { deleteProspect, setCurrProspect } from "../../store/slices/prospectData.js"
 
 import { FaCarCrash } from "react-icons/fa";
-import { GiPirateGrave } from "react-icons/gi";
+import { RiLifebuoyFill } from "react-icons/ri";
 import { FaHospital } from "react-icons/fa6";
 import { FaHouseFire } from "react-icons/fa6";
 import { FaTrashAlt } from "react-icons/fa";
@@ -43,12 +43,12 @@ const Prospect = ({
                         "text-red-400" :
                         "text-green-400"
                     }
-                    ml-10 mr-44 font-bold
+                    w-[20%] font-bold
                 `}>
                     ( { age } )
                 </div>
 
-                <div className="flex justify-between w-[22%]">
+                <div className="flex justify-between w-[30%]">
                     <div 
                     className={`
                         ${
@@ -74,7 +74,7 @@ const Prospect = ({
                         flex justify-center bg-green-600 text-white h-16 w-16 p-4 rounded
                     `}>
 
-                        <GiPirateGrave 
+                        <RiLifebuoyFill 
                         className="w-8 h-8"
                         />
                     </div>
@@ -109,7 +109,7 @@ const Prospect = ({
                     </div>
                 </div>
 
-                <div className="flex justify-end w-[38.5%] ">
+                <div className="flex justify-end w-[40%]">
                     <div 
                     onClick={e => {
                         e.stopPropagation();
