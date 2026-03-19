@@ -69,7 +69,7 @@ const FireLine = () => {
     useEffect(() => {
         if (monthlyTotal !== undefined && monthlyTotal !== null) {
             setMonthlyInput(monthlyTotal.toFixed(2));
-            setTwelveMonthInput((monthlyTotal * 6).toFixed(2));
+            setTwelveMonthInput((monthlyTotal * 12).toFixed(2));
         };
     }, [monthlyTotal]);
 

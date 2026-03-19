@@ -204,7 +204,7 @@ const QuotesContainer = () => {
                             </div>
 
                             <div className="w-[50%] text-right">
-                                ${ totalBundlePrice * 6 }/6mo
+                                ${ (totalBundlePrice * 6).toFixed(2) }/6mo
                             </div>
                         </div>
                     </div>
