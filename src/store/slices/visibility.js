@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     prospectContVis: true,
     quoteContVis: false,
-    prospectModalVis: false
+    prospectModalVis: false,
+    notesVis: false
 };
 
 export const visibilitySlice = createSlice({
@@ -13,6 +14,7 @@ export const visibilitySlice = createSlice({
         setProspectContVis: (state) => {
             state.prospectContVis = true;
             state.quoteContVis = false;
+            state.notesVis = false;
         },
 
         setQuoteContVis: (state) => {
@@ -22,6 +24,11 @@ export const visibilitySlice = createSlice({
 
         setProspectModVis: (state) => {
             state.prospectModalVis = !state.prospectModalVis;
+            state.notesVis = false;
+        },
+
+        setNotesVis: (state) => {
+            state.notesVis = !state.notesVis;
         },
     },
 });
@@ -29,7 +36,8 @@ export const visibilitySlice = createSlice({
 export const {
     setProspectContVis,
     setQuoteContVis,
-    setProspectModVis
+    setProspectModVis,
+    setNotesVis
 } = visibilitySlice.actions;
 
 export default visibilitySlice.reducer;

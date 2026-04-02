@@ -82,7 +82,9 @@ export const buildNewProspect = (
         life: lifeValue,
         health: healthValue,
         fire: fireValue,
-        quotes: existingQuotes ? existingQuotes : []
+        quotes: existingQuotes ? existingQuotes : [],
+        isBookmarked: false,
+        notes: ""
     };
 
     const quoteData = processQuoteData(currProspect);

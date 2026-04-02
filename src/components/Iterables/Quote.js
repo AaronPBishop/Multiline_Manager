@@ -12,8 +12,14 @@ import { FaTrashAlt } from "react-icons/fa";
 const Quote = ({ quoteId }) => {
     const dispatch = useDispatch();
 
+    const totalQuotes = useSelector(state =>
+        state.prospectData.currProspect?.quotes?.length
+    );
     const storedQuote = useSelector(state =>
         state.prospectData.currProspect?.quotes?.find(q => q.id === quoteId)
+    );
+    const currQuoteId = useSelector(state =>
+        state.prospectData.currQuote?.id
     );
 
     const [autoActive, setAutoActive] = useState(false);
@@ -53,18 +59,23 @@ const Quote = ({ quoteId }) => {
         className="flex justify-center items-center w-full h-fit text-white"
         >
             <div
-                onClick={() => {
-                    if (quoteId) dispatch(setCurrQuote(quoteId));
-                }}
-                className="flex w-full items-center h-20 pl-4 py-10 shadow-lg my-2 rounded-lg border-b-4 border-slate-900 text-xl bg-emerald-700 cursor-pointer"
-            >
+            onClick={() => {
+                if (quoteId) dispatch(setCurrQuote(quoteId));
+            }}
+            className={`
+                ${
+                    currQuoteId === quoteId && totalQuotes > 1 ?
+                    "border-4 border-slate-100 rounded-xl" :
+                    "border-b-4 border-slate-900 rounded-lg"
+                }
+                flex w-full items-center h-20 pl-4 py-10 shadow-lg my-2 text-xl bg-emerald-700 cursor-pointer
+            `}>
 
-                <div className="font-bold mr-4">
+                <div className="font-bold mr-4 w-[40%] bg-emerald-800 rounded p-1 text-center">
                     ${total.toFixed(2)}
                 </div>
 
                 <div className="flex justify-evenly w-full">
-
                     <div className={`${autoActive ? "opacity-100" : "opacity-10"} flex justify-center bg-blue-800 text-white h-14 w-14 p-4 rounded`}>
                         <FaCarCrash className="w-6 h-6" />
                     </div>
@@ -80,7 +91,6 @@ const Quote = ({ quoteId }) => {
                     <div className={`${fireActive ? "opacity-100" : "opacity-10"} flex justify-center bg-red-600 text-white h-14 w-14 p-4 rounded`}>
                         <FaHouseFire className="w-6 h-6" />
                     </div>
-
                 </div>
 
                 <div className="flex justify-end w-[19%]">

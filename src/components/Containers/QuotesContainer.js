@@ -1,5 +1,7 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+
+import { updateProspectNotes } from "../../store/slices/prospectData.js";
 
 import { FaCarCrash } from "react-icons/fa";
 import { RiLifebuoyFill } from "react-icons/ri";
@@ -13,7 +15,11 @@ import HealthLine from "../Iterables/Line/HealthLine.js";
 import FireLine from "../Iterables/Line/FireLine.js";
 
 const QuotesContainer = () => {
+    const dispatch = useDispatch();
+
     const prospectState = useSelector(state => state.prospectData);
+    const noteVisibility = useSelector(state => state.visibility.notesVis);
+    const prospectNotes = useSelector(state => state.prospectData.currProspect.notes);
 
     const autoTotal = useSelector(state => state.prospectData.currQuote.auto?.price);
     const lifeTotal = useSelector(state => state.prospectData.currQuote.life?.price);
@@ -69,39 +75,54 @@ const QuotesContainer = () => {
             <div className="flex justify-between flex-wrap w-full h-full">
                 <div 
                 className="flex w-[65%] items-center h-[75%] mt-10 p-2 border-b-4 border-t-2 border-slate-900 rounded-tr-lg rounded-br-lg shadow-xl mr-1 my-2 bg-slate-900 rounded-md text-[20px]">
-                    <div className="w-[70%] h-full flex items-center justify-center">
-                        {
-                            selected && selectedLine === "auto" ?
-                            <AutoLine /> :
-                            selected && selectedLine === "life" ?
-                            <LifeLine /> :
-                            selected && selectedLine === "health" ?
-                            <HealthLine /> :
-                            selected && selectedLine === "fire" &&
-                            <FireLine />
-                        }
-                    </div>
-
-                    <div className="w-[30%] h-full flex flex-wrap justify-end items-center gap-2 px-6 items-start">
-                        {
-                            remaining.map(line => {
-                                const Icon = line.icon;
-
-                                return (
-                                    <div
-                                    key={line.key}
-                                    onClick={() => setSelectedLine(line.key)}
-                                    className={`
-                                        ${line.color} 
-                                        ${line.borderColor}
-                                        flex justify-center items-center text-white h-[150px] w-56 rounded-xl border-b-4 cursor-pointer shadow-xl
-                                    `}>
-                                        <Icon className="w-20 h-20" />
-                                    </div>
-                                );
-                            })
-                        }
-                    </div>
+                    {
+                        noteVisibility ?
+                        <textarea
+                        value={prospectNotes}
+                        placeholder="Type something..."
+                        onInput={e => {
+                            dispatch(updateProspectNotes(e.target.value));
+                        }}
+                        className="w-full h-full p-4 rounded-lg text-white font-bold bg-slate-950 resize-none border-none focus:outline-none focus:ring-0"
+                        >
+                        </textarea> 
+                        :
+                        <>
+                            <div className="w-[70%] h-full flex items-center justify-center">
+                                {
+                                    selected && selectedLine === "auto" ?
+                                    <AutoLine /> :
+                                    selected && selectedLine === "life" ?
+                                    <LifeLine /> :
+                                    selected && selectedLine === "health" ?
+                                    <HealthLine /> :
+                                    selected && selectedLine === "fire" &&
+                                    <FireLine />
+                                }
+                            </div>
+                            
+                            <div className="w-[30%] h-full flex flex-wrap justify-end items-center gap-2 px-6 items-start">
+                                {
+                                    remaining.map(line => {
+                                        const Icon = line.icon;
+                                    
+                                        return (
+                                            <div
+                                            key={line.key}
+                                            onClick={() => setSelectedLine(line.key)}
+                                            className={`
+                                                ${line.color} 
+                                                ${line.borderColor}
+                                                flex justify-center items-center text-white h-[150px] w-56 rounded-xl border-b-4 cursor-pointer shadow-xl
+                                            `}>
+                                                <Icon className="w-20 h-20" />
+                                            </div>
+                                        );
+                                    })
+                                }
+                            </div>
+                        </>
+                    }
                 </div>
 
                 <div 

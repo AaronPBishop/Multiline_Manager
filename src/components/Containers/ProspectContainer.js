@@ -2,6 +2,8 @@ import { useSelector } from "react-redux";
 
 import Prospect from '../Iterables/Prospect.js'
 
+import { SiFireship } from "react-icons/si";
+
 const ProspectContainer = () => {
     const prospectState = useSelector(state => state.prospectData);
     const prospectSearch = useSelector(state => state.prospectData.prospectSearch);
@@ -17,47 +19,94 @@ const ProspectContainer = () => {
                         Get started by adding a new prospect above.
                     </h1>
                 </div> :
-                [...prospectState.prospects].reverse().map(prospect => {
-                    const search = prospectSearch.trim().toLowerCase();
+                <div>
+                    <div className={`
+                        ${prospectSearch.trim().length && "hidden"}
+                        ${
+                            ![...prospectState.prospects].filter(p => p.isBookmarked).length ?
+                            "hidden" :
+                            "mb-4"
+                        }
+                        shadow-2xl border-b-4 border-slate-950 bg-slate-950 rounded-2xl pb-4
+                    `}>
+                        <div className="text-red-500 text-[40px] px-5 pb-2 pt-4">
+                            <SiFireship />
+                        </div>
 
-                    if (!search.length) {
-                        return (
-                            <Prospect
-                                key={prospect.id}
-                                id={prospect.id}
-                                firstName={prospect.firstName}
-                                lastName={prospect.lastName}
-                                age={prospect.age}
-                                auto={prospect.auto}
-                                life={prospect.life}
-                                health={prospect.health}
-                                fire={prospect.fire}
-                            />
-                        );
-                    };
-                
-                    if (
-                        prospect.firstName.toLowerCase().includes(search) ||
-                        prospect.lastName.toLowerCase().includes(search) ||
-                        `${prospect.firstName.toLowerCase()} ${prospect.lastName.toLowerCase()}`.includes(search)
-                    ) {
-                        return (
-                            <Prospect
-                                key={prospect.id}
-                                id={prospect.id}
-                                firstName={prospect.firstName}
-                                lastName={prospect.lastName}
-                                age={prospect.age}
-                                auto={prospect.auto}
-                                life={prospect.life}
-                                health={prospect.health}
-                                fire={prospect.fire}
-                            />
-                        );
-                    };
-                    
-                    return null;
-                })
+                        {
+                            [...prospectState.prospects].reverse().map(prospect => {
+                                if (prospect.isBookmarked) {
+                                    return (
+                                        <Prospect
+                                            key={prospect.id}
+                                            id={prospect.id}
+                                            firstName={prospect.firstName}
+                                            lastName={prospect.lastName}
+                                            age={prospect.age}
+                                            auto={prospect.auto}
+                                            life={prospect.life}
+                                            health={prospect.health}
+                                            fire={prospect.fire}
+                                            isBookmarked={prospect.isBookmarked}
+                                        />
+                                    );
+                                };
+                            
+                                return null;
+                            })
+                        }
+                    </div>
+
+                    <div>
+                        {
+                            [...prospectState.prospects].reverse().map(prospect => {
+                                const search = prospectSearch.trim().toLowerCase();
+                            
+                                if (!search.length) {
+                                    if (prospect.isBookmarked) return null;
+
+                                    return (
+                                        <Prospect
+                                            key={prospect.id}
+                                            id={prospect.id}
+                                            firstName={prospect.firstName}
+                                            lastName={prospect.lastName}
+                                            age={prospect.age}
+                                            auto={prospect.auto}
+                                            life={prospect.life}
+                                            health={prospect.health}
+                                            fire={prospect.fire}
+                                            isBookmarked={prospect.isBookmarked}
+                                        />
+                                    );
+                                };
+                            
+                                if (
+                                    prospect.firstName.toLowerCase().includes(search) ||
+                                    prospect.lastName.toLowerCase().includes(search) ||
+                                    `${prospect.firstName.toLowerCase()} ${prospect.lastName.toLowerCase()}`.includes(search)
+                                ) {
+                                    return (
+                                        <Prospect
+                                            key={prospect.id}
+                                            id={prospect.id}
+                                            firstName={prospect.firstName}
+                                            lastName={prospect.lastName}
+                                            age={prospect.age}
+                                            auto={prospect.auto}
+                                            life={prospect.life}
+                                            health={prospect.health}
+                                            fire={prospect.fire}
+                                            isBookmarked={prospect.isBookmarked}
+                                        />
+                                    );
+                                };
+                            
+                                return null;
+                            })
+                        }
+                    </div>
+                </div>
             }
         </div>
     );

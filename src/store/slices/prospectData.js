@@ -14,7 +14,9 @@ const initialState = {
         health: "",
         fire: "",
         // All quotes saved under prospect record
-        quotes: []
+        quotes: [],
+        isBookmarked: false,
+        notes: ``
     },
     currQuote: {
         id: "",
@@ -99,6 +101,28 @@ export const prospectDataSlice = createSlice({
             state.currQuote = state.currProspect.quotes[0];
         },
 
+        bookmarkProspect: (state, action) => {
+            const currProspect = state.prospects.find(prospect =>
+                prospect.id === action.payload
+            );
+
+            if (!currProspect.isBookmarked) {
+                currProspect.isBookmarked = true;
+                return;
+            };
+
+            currProspect.isBookmarked = !currProspect.isBookmarked;
+        },
+
+        updateProspectNotes: (state, action) => {
+            const newNotes = action.payload;
+
+            state.currProspect.notes = newNotes;
+
+            const prospect = state.prospects.find(p => p.id === state.currProspect.id);
+            if (prospect) prospect.notes = newNotes;
+        },
+
         // Current Quote
         setCurrQuote: (state, action) => {
             const quote = state.currProspect.quotes.find(q => q.id === action.payload);
@@ -139,9 +163,7 @@ export const prospectDataSlice = createSlice({
         
             if (!prospect) return;
         
-            const quoteIndex = prospect.quotes.findIndex(q => q.id === state.currQuote.id);
-        
-            if (quoteIndex !== -1) prospect.quotes[quoteIndex] = state.currQuote;
+            prospect.quotes = state.currProspect.quotes;
         },
 
         addQuoteToExisting: (state, action) => {
@@ -150,6 +172,19 @@ export const prospectDataSlice = createSlice({
 
             if (prospect) {
                 prospect.quotes = [...newQuote.quotes];
+                state.currQuote = newQuote;
+                state.currProspect.quotes = prospect.quotes;
+            };
+        },
+
+        duplicateQuote: (state) => {
+            const { ...newQuote } = state.currQuote;
+            newQuote.id = crypto.randomUUID()
+            
+            const prospect = state.prospects.find(p => p.id === state.currProspect.id);
+
+            if (prospect) {
+                prospect.quotes = [...prospect.quotes, newQuote];
                 state.currQuote = newQuote;
                 state.currProspect.quotes = prospect.quotes;
             };
@@ -183,6 +218,8 @@ export const {
     deleteProspect,
     clearProspects,
     setCurrProspect,
+    bookmarkProspect,
+    updateProspectNotes,
     setCurrQuote,
     updateQuoteAuto,
     updateQuoteLife,
@@ -191,6 +228,7 @@ export const {
     persistQuoteData,
     addQuoteToExisting,
     searchProspects,
+    duplicateQuote,
     deleteQuote
 } = prospectDataSlice.actions;
 
