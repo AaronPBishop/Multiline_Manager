@@ -99,7 +99,7 @@ const Quote = ({ quoteId }) => {
                             e.stopPropagation();
                             dispatch(deleteQuote(quoteId));
                         }}
-                        className="flex relative right-1 items-center justify-center bg-red-500 text-white w-8 h-8 mb-10 rounded-lg text-center text-[16px] cursor-pointer"
+                        className="flex relative right-1 items-center justify-center bg-red-500 text-white w-8 h-8 mb-10 rounded-lg text-center text-[16px] cursor-pointer border-b-4 border-red-700 shadow"
                     >
                         <FaTrashAlt />
                     </div>

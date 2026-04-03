@@ -36,7 +36,7 @@ const NavBar = () => {
                             "bg-emerald-600 border-emerald-900" :
                             "bg-orange-500 border-orange-800"
                         }
-                        flex h-full justify-between text-xl text-white px-8 py-4 mx-6 rounded-md border-b-4 shadow-lg text-center flex align-center items-center cursor-pointer font-bold w-[50%]
+                        flex h-full justify-between text-xl text-white px-8 py-4 mx-6 rounded-md border-b-4 shadow-lg text-center flex align-center items-center cursor-pointer font-bold w-[40%]
                     `}>
                         New Prospect
 
@@ -47,8 +47,8 @@ const NavBar = () => {
 
                     <input
                     type="text"
-                    placeholder="Search Prospects"
-                    className="w-[30%] py-4 border-b-2 border-slate-300 px-4 rounded-lg p-2 mx-6 font-bold bg-slate-50"
+                    placeholder="...Search Prospects"
+                    className="w-[30%] py-4 border-b-[3px] border-slate-500 px-4 rounded-[40px] p-2 mx-6 font-bold shadow-2xl focus:outline-none bg-slate-100 text-white"
                     value={prospectSearch}
                     onChange={e => {
                         dispatch(searchProspects(e.target.value))
@@ -57,35 +57,38 @@ const NavBar = () => {
                 </> :
                 <>
                     <div className="flex gap-4">
-                        <div className={`
+                        <div 
+                        className={`
                             flex justify-center items-center bg-green-600 p-2 rounded-lg w-16 h-15 border-b-4 border-green-900 cursor-pointer
-                        `}>
+                        `}
+                        onClick={() => {
+                            dispatch(persistQuoteData());
+                            dispatch(setProspectContVis());
+                        }}>
                             <TbHomeMove 
-                            onClick={() => {
-                                dispatch(persistQuoteData());
-                                dispatch(setProspectContVis());
-                            }}
                             className="text-white w-10 h-10"
                             />
                         </div>
 
-                        <div className={`
-                            flex justify-center items-center bg-purple-700 p-2 rounded-lg w-16 h-15 border-b-4 border-purple-900 cursor-pointer
-                        `}>
+                        <div 
+                        className={`
+                            ${
+                                visibilityState.notesVis ?
+                                "bg-blue-800 border-blue-950" :
+                                "bg-purple-700 border-purple-900"
+                            }
+                            flex justify-center items-center p-2 rounded-lg w-16 h-15 border-b-4 cursor-pointer
+                        `}
+                        onClick={() => {
+                            dispatch(persistQuoteData());
+                            dispatch(setNotesVis());
+                        }}>
                             {
                                 visibilityState.notesVis ?
                                 <MdRequestQuote 
-                                onClick={() => {
-                                    dispatch(persistQuoteData());
-                                    dispatch(setNotesVis());
-                                }}
                                 className="text-white w-10 h-10"
                                 /> :
                                 <MdStickyNote2 
-                                onClick={() => {
-                                    dispatch(persistQuoteData());
-                                    dispatch(setNotesVis());
-                                }}
                                 className="text-white w-10 h-10"
                                 />
                             }

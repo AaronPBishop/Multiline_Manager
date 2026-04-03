@@ -121,7 +121,7 @@ const Prospect = ({
 
                             dispatch(bookmarkProspect(id));
                         }}
-                        className="flex items-center justify-center bg-red-500 text-white w-8 h-8 mb-10 rounded-lg text-center text-[16px] cursor-pointer">
+                        className="flex items-center justify-center bg-red-500 text-white w-9 h-9 mb-10 rounded-lg text-center text-[16px] cursor-pointer border-b-4 border-red-700 shadow-md">
                             <MdBookmarkRemove />
                         </div> 
                         :
@@ -131,7 +131,7 @@ const Prospect = ({
 
                             dispatch(bookmarkProspect(id));
                         }}
-                        className="flex items-center justify-center bg-emerald-500 text-white w-8 h-8 mb-10 rounded-lg text-center text-[16px] cursor-pointer">
+                        className="flex items-center justify-center bg-emerald-500 text-white w-9 h-9 mb-10 rounded-lg text-center text-[16px] cursor-pointer border-b-4 border-emerald-700 shadow-md">
                             <MdBookmarkAdd />
                         </div>
                     }
@@ -142,7 +142,7 @@ const Prospect = ({
                         
                         dispatch(deleteProspect(id));
                     }}
-                    className="flex items-center justify-center bg-red-500 text-white w-8 h-8 mb-10 rounded-lg text-center text-[16px] cursor-pointer">
+                    className="flex items-center justify-center bg-red-500 text-white w-9 h-9 mb-10 rounded-lg text-center text-[16px] cursor-pointer border-b-4 border-red-700 shadow-md">
                         <FaTrashAlt />
                     </div>
                 </div>
