@@ -8,7 +8,7 @@ import { BsSuitSpadeFill } from "react-icons/bs";
 import { MdStickyNote2 } from "react-icons/md";
 import { MdRequestQuote } from "react-icons/md";
 
-
+import EmailQuote from "../Iterables/EmailQuote.js";
 import CreateProspectQuotes from "../Modals/CreateProspectQuotes.js";
 
 const NavBar = () => {
@@ -56,38 +56,42 @@ const NavBar = () => {
                     />
                 </> :
                 <>
-                    <div className={`
-                        flex justify-center items-center bg-green-600 p-2 rounded-lg w-16 h-15 ml-1 mr-2 border-b-4 border-green-900 cursor-pointer
-                    `}>
-                        <TbHomeMove 
-                        onClick={() => {
-                            dispatch(persistQuoteData());
-                            dispatch(setProspectContVis());
-                        }}
-                        className="text-white w-10 h-10"
-                        />
-                    </div>
-
-                    <div className={`
-                        flex justify-center items-center bg-purple-700 p-2 rounded-lg w-16 h-15 ml-1 border-b-4 border-purple-900 cursor-pointer
-                    `}>
-                        {
-                            visibilityState.notesVis ?
-                            <MdRequestQuote 
+                    <div className="flex gap-4">
+                        <div className={`
+                            flex justify-center items-center bg-green-600 p-2 rounded-lg w-16 h-15 border-b-4 border-green-900 cursor-pointer
+                        `}>
+                            <TbHomeMove 
                             onClick={() => {
                                 dispatch(persistQuoteData());
-                                dispatch(setNotesVis());
-                            }}
-                            className="text-white w-10 h-10"
-                            /> :
-                            <MdStickyNote2 
-                            onClick={() => {
-                                dispatch(persistQuoteData());
-                                dispatch(setNotesVis());
+                                dispatch(setProspectContVis());
                             }}
                             className="text-white w-10 h-10"
                             />
-                        }
+                        </div>
+
+                        <div className={`
+                            flex justify-center items-center bg-purple-700 p-2 rounded-lg w-16 h-15 border-b-4 border-purple-900 cursor-pointer
+                        `}>
+                            {
+                                visibilityState.notesVis ?
+                                <MdRequestQuote 
+                                onClick={() => {
+                                    dispatch(persistQuoteData());
+                                    dispatch(setNotesVis());
+                                }}
+                                className="text-white w-10 h-10"
+                                /> :
+                                <MdStickyNote2 
+                                onClick={() => {
+                                    dispatch(persistQuoteData());
+                                    dispatch(setNotesVis());
+                                }}
+                                className="text-white w-10 h-10"
+                                />
+                            }
+                        </div>
+
+                        <EmailQuote />
                     </div>
 
                     <div className="flex justify-end gap-5 text-white font-bold w-[50%] text-xl bg-slate-900 p-2">
@@ -113,7 +117,7 @@ const NavBar = () => {
                                 "bg-emerald-600 border-emerald-900" :
                                 "bg-orange-500 border-orange-800"
                             }
-                            flex h-full px-8 py-4 mr-2 rounded-md border-b-4 shadow-lg text-center justify-center align-center items-center cursor-pointer font-bold w-[35.2%]
+                            flex h-full px-8 py-4 mr-2 rounded-md border-b-4 shadow-lg text-center justify-center align-center items-center cursor-pointer font-bold w-[37.7%]
                         `}>
                             New Quote
                         </div>
@@ -122,7 +126,7 @@ const NavBar = () => {
                         onClick={() => dispatch(duplicateQuote())}
                         className={`
                             bg-emerald-600 border-emerald-900
-                            flex h-full px-8 py-4 ml-2 rounded-md border-b-4 shadow-lg text-center justify-center align-center items-center cursor-pointer font-bold w-[35.2%]
+                            flex h-full px-8 py-4 ml-2 rounded-md border-b-4 shadow-lg text-center justify-center align-center items-center cursor-pointer font-bold w-[37.7%]
                         `}>
                             Duplicate Current
                         </div>
