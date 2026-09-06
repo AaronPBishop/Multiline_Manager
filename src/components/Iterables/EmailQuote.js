@@ -100,7 +100,7 @@ const EmailQuote = () => {
 
                 // Greeting
                 sections.push(`Hi ${formattedName},\n
-Just wanted to reach out to you and provide you with some options for an auto policy here at Tyler Johns State Farm, if you’re still interested in getting a better deal. I’ve attached a copy of the quoted policies for you to review. Here’s a breakdown of the coverages:\n`);
+Just wanted to reach out to you and provide you with some options for an auto policy here at ____, if you’re still interested in getting a better deal. I’ve attached a copy of the quoted policies for you to review. Here’s a breakdown of the coverages:\n`);
 
                 // Liability BI
                 sections.push(`[Liability – Bodily Injury] 

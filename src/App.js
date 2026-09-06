@@ -31,7 +31,7 @@ const App = () => {
             }
 
             <h6 className="text-white fixed bottom-0 left-1 text-[6px]">
-                Intellectual property of Aaron Bishop © - Intended for use by employees of Tyler Johns State Farm Agency only
+                Intellectual property of Aaron Bishop ®
             </h6>
         </div>
     );

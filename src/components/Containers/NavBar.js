@@ -48,7 +48,7 @@ const NavBar = () => {
                     <input
                     type="text"
                     placeholder="...Search Prospects"
-                    className="w-[30%] py-4 border-b-[3px] border-slate-500 px-4 rounded-[40px] p-2 mx-6 font-bold shadow-2xl focus:outline-none bg-slate-100 text-white"
+                    className="w-[30%] py-4 border-b-[3px] border-slate-500 px-4 rounded-[40px] p-2 mx-6 font-bold shadow-2xl focus:outline-none bg-slate-100 text-black"
                     value={prospectSearch}
                     onChange={e => {
                         dispatch(searchProspects(e.target.value))
